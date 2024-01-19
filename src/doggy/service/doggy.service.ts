@@ -149,6 +149,7 @@ export class DoggyService {
   async processArrayIds(ids: string[]): Promise<void> {
     const totalId = ids.length;
     let processedCount = 0;
+
     try {
       for (const id of ids) {
         this.logger.log(
@@ -160,13 +161,17 @@ export class DoggyService {
       while (!this.queueService.isEmpty()) {
         const id = this.queueService.dequeue();
         if (id) {
-          // const delayDuration = 2 * 60 * 1000;
-          // await new Promise((resolve) => setTimeout(resolve, delayDuration));
+          const startTime = performance.now(); // Record start time
+
           try {
             await this.processID(id);
             processedCount++;
+
+            const endTime = performance.now(); // Record end time
+            const elapsedTime = endTime - startTime; // Calculate elapsed time in milliseconds
+
             this.logger.log(
-              `processed ${processedCount} of ${totalId}, ${this.queueService.getSize()} left`,
+              `processed ${processedCount} of ${totalId}, ${this.queueService.getSize()} left. Time taken: ${elapsedTime.toFixed(2)} ms for ID ${id}`,
             );
           } catch (err) {
             console.error(`Error processing ID ${id}:`, err);
@@ -178,9 +183,10 @@ export class DoggyService {
           );
         }
       }
+
       await this.saveScrapedDataToJson();
     } catch (err) {
-      console.log('we found an error here :error');
+      console.log('we found an error here: ', err);
       return runMeErrorHelper(err);
     }
   }
@@ -229,7 +235,7 @@ export class DoggyService {
       );
       fs.writeFileSync(jsonFilePath, JSON.stringify(json2, null, 2), 'utf-8');
       return {
-        message: 'success'
+        message: 'success',
       };
     } catch (err) {
       return runMeErrorHelper(err);
