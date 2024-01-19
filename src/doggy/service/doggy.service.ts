@@ -6,16 +6,28 @@ import * as path from 'path';
 import { QueueService } from './queue.service';
 import { json1 } from '../../core/helpers/json1';
 import { json2 } from '../../core/helpers/json2';
+// import * as tf from '@tensorflow/tfjs-node';
+// import * as mobilenet from '@tensorflow-models/mobilenet';
 
 @Injectable()
 export class DoggyService {
   url: string = 'https://doggy.market/inscription/';
   get_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+  // private model: tf.GraphModel;
   private readonly scrapedData: any[] = [];
 
   private readonly logger = new Logger(DoggyService.name);
 
-  constructor(private queueService: QueueService) {}
+  constructor(private queueService: QueueService) {
+    this.loadModel();
+  }
+
+  private async loadModel() {
+    // Assuming you have your model loading logic here
+    // this.model = await tf.loadGraphModel(
+    //   'C:/Basty/CodeGen/nft-scrapper/model.json',
+    // );
+  }
 
   async processID(id: string) {
     try {
@@ -240,5 +252,34 @@ export class DoggyService {
     } catch (err) {
       return runMeErrorHelper(err);
     }
+  }
+
+  async classifyImage(imagePath: string): Promise<any> {
+    // Ensure the model is loaded before performing inference
+    // if (!this.model) {
+    //   // If the model is not loaded, attempt to load it
+    //   await this.loadModel();
+    // }
+
+    // Load the image as a tensor
+    const imageBuffer = fs.readFileSync(imagePath);
+    // const imageTensor = tf.node.decodeImage(imageBuffer);
+
+    // Preprocess the image
+    // const processedImage = tf.div(imageTensor, 255.0);
+    // const batchedImage = processedImage.expandDims(0);
+
+    // Perform inference
+    // const predictions = (await this.model.predict(batchedImage)) as tf.Tensor;
+    // const topPredictions = Array.from(predictions.dataSync());
+
+    // Postprocess the predictions (you may need to adjust this based on your model)
+    // const result = topPredictions.map((confidence, index) => ({
+    //   classIndex: index,
+    //   confidence,
+    // }));
+
+    // // Return the result (you may want to return meaningful class labels)
+    // return result;
   }
 }

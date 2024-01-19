@@ -33,4 +33,9 @@ export class DoggyController {
     const second = json2
     return this.doggyService.mergeAttributes(first, second)
   }
+
+  @Get('classify')
+  getImageClassification(){
+    
+  }
 }
