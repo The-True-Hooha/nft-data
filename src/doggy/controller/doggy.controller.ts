@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { DoggyService } from '../service/doggy.service';
 import { QueueService } from '../service/queue.service';
 import { IdArray } from 'src/core/array.helper';
@@ -20,22 +20,25 @@ export class DoggyController {
 
   @Get('/process')
   processAllIds() {
-    const getArrayId = IdArray.map((id) => id.trim())
-    const fullUrl = `${this.url}${getArrayId[0]}`
-    console.log(fullUrl)
-    console.log(getArrayId[0])
-    return this.doggyService.processArrayIds(getArrayId)
+    const getArrayId = IdArray.map((id) => id.trim());
+    const fullUrl = `${this.url}${getArrayId[0]}`;
+    console.log(fullUrl);
+    console.log(getArrayId[0]);
+    return this.doggyService.processArrayIds(getArrayId);
   }
 
   @Get('/json')
-  getPath(){
-    const first = json1
-    const second = json2
-    return this.doggyService.mergeAttributes(first, second)
+  getPath() {
+    const first = json1;
+    const second = json2;
+    return this.doggyService.mergeAttributes(first, second);
   }
 
   @Get('classify')
-  getImageClassification(){
-    
+  getImageClassification() {}
+
+  @Get('/excel')
+  runToExcel() {
+    return this.doggyService.moveJsonToExcel();
   }
 }

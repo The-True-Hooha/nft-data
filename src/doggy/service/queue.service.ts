@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as path from 'path';
+// import * as path from 'path';
 
 @Injectable()
 export class QueueService {
@@ -34,6 +34,4 @@ export class QueueService {
     this.logger.log(`fetching the total size of the queue`);
     return this.queue.length;
   }
-
-
 }

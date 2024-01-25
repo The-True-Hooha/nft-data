@@ -26,6 +26,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@tensorflow-models/mobilenet": "^2.1.1",
     "@tensorflow/tfjs-node": "^4.16.0",
+    "exceljs": "^4.4.0",
     "fs": "^0.0.1-security",
     "p-queue": "^8.0.1",
     "puppeteer-core": "^21.7.0",

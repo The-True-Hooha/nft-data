@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, Logger } from '@nestjs/common';
 import puppeteer, { executablePath } from 'puppeteer-core';
 import { runMeErrorHelper } from 'src/core/helpers/error.helpers';
 import * as fs from 'fs';
 import * as path from 'path';
 import { QueueService } from './queue.service';
-import { json1 } from '../../core/helpers/json1';
-import { json2 } from '../../core/helpers/json2';
+import * as ExcelJS from 'exceljs';
+// import { json1 } from '../../core/helpers/json1';
+// import { json2 } from '../../core/helpers/json2';
 // import * as tf from '@tensorflow/tfjs-node';
 // import * as mobilenet from '@tensorflow-models/mobilenet';
 
@@ -262,7 +264,7 @@ export class DoggyService {
     // }
 
     // Load the image as a tensor
-    const imageBuffer = fs.readFileSync(imagePath);
+    fs.readFileSync(imagePath);
     // const imageTensor = tf.node.decodeImage(imageBuffer);
 
     // Preprocess the image
@@ -281,5 +283,64 @@ export class DoggyService {
 
     // // Return the result (you may want to return meaningful class labels)
     // return result;
+  }
+
+  async moveJsonToExcel() {
+    console.log('hello');
+    try {
+      const jsonFilePath = path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        'scraped_data.json',
+      );
+
+      const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
+      console.log(jsonData);
+
+      const workbook = new ExcelJS.Workbook();
+      const excel = workbook.addWorksheet('Rarity Check Excel');
+
+      excel.columns = [
+        { header: 'InscriptionId', key: 'inscriptionId' },
+        { header: 'ImageUrl', key: 'imageUrl' },
+        { header: 'Name', key: 'name' },
+        { header: 'Number', key: 'number' },
+        { header: 'Hat', key: 'hat' },
+        { header: 'Eye', key: 'eye' },
+        { header: 'Mouth', key: 'mouth' },
+        { header: 'Necklace', key: 'necklace' },
+        { header: 'Shoes', key: 'shoes' },
+      ];
+
+      jsonData.forEach((item: any) => {
+        let attributes: any = {};
+
+        if (item.attributes && item.attributes.length > 0) {
+          attributes = item.attributes[0];
+        } else if (item.attributes) {
+          attributes = item.attributes;
+        }
+
+        excel.addRow({
+          inscriptionId: item.inscriptionId,
+          imageUrl: item.imageUrl,
+          name: item.name,
+          number: item.number,
+          hat: attributes?.Hat,
+          eye: attributes?.Eye,
+          mouth: attributes?.Mouth,
+          necklace: attributes?.Necklace,
+          shoes: attributes?.Shoes,
+        });
+      });
+
+      const filePath = path.join(__dirname, '..', '..', '..', 'data.xlsx');
+      await workbook.xlsx.writeFile(filePath);
+    } catch (err) {
+      console.error('Error:', err);
+      return runMeErrorHelper(err);
+    }
   }
 }

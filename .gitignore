@@ -42,3 +42,7 @@ src/core/helpers/json1.ts
 src/core/helpers/json2.ts
 traits.json
 nft-data.json
+model.json
+data.xlsx
+excel data.xlsx
+
