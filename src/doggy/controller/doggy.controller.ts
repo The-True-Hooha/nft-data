@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { DoggyService } from '../service/doggy.service';
 import { QueueService } from '../service/queue.service';
-import { IdArray } from 'src/core/array.helper';
+import { IdArray, blackGlasses } from 'src/core/array.helper';
 import { json1 } from 'src/core/helpers/json1';
 import { json2 } from 'src/core/helpers/json2';
 
@@ -40,5 +40,12 @@ export class DoggyController {
   @Get('/excel')
   runToExcel() {
     return this.doggyService.moveJsonToExcel();
+  }
+
+  @Get('/edit')
+  runEditHat() {
+    const data = blackGlasses.map((v) => v.trim());
+    // const g = purpleGlasses.map((id) => id.trim());
+    return this.doggyService.replaceHat(data);
   }
 }

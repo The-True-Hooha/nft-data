@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, Logger } from '@nestjs/common';
 import puppeteer, { executablePath } from 'puppeteer-core';
@@ -293,14 +294,14 @@ export class DoggyService {
         '..',
         '..',
         '..',
-        'scraped_data.json',
+        'dogePunk_data.json',
       );
 
       const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
       console.log(jsonData);
 
       const workbook = new ExcelJS.Workbook();
-      const excel = workbook.addWorksheet('Rarity Check Excel');
+      const excel = workbook.addWorksheet('DogePunk Rarity Checker Excel');
 
       excel.columns = [
         { header: 'InscriptionId', key: 'inscriptionId' },
@@ -336,11 +337,60 @@ export class DoggyService {
         });
       });
 
-      const filePath = path.join(__dirname, '..', '..', '..', 'data.xlsx');
+      const filePath = path.join(__dirname, '..', '..', '..', 'dogePunk_data.xlsx');
       await workbook.xlsx.writeFile(filePath);
     } catch (err) {
       console.error('Error:', err);
       return runMeErrorHelper(err);
+    }
+  }
+
+  async replaceHat(purpleHat: string[]): Promise<any> {
+    try {
+      const jsonFilePath = path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        '_data.json',
+      );
+
+      // Read the JSON file
+      const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
+
+      // Iterate through the purpleHat array
+      purpleHat.forEach((number: string) => {
+        // "name": "DogePunk #594",
+        const matchNumber = `DogePunk #${number}`;
+        // const matchNumber = `#${number}`;
+        const matchingObject = jsonData.find((item: any) =>
+          item.name.includes(matchNumber),
+        );
+
+        // // Find the object with the matching number
+        // const matchingObject = jsonData.find(
+        //   (item: any) => item.number === matchNumber,
+        // );
+
+        if (matchingObject) {
+          // Update the attributes.Eye property
+          matchingObject.attributes[0].Eye = 'black glasses 3';
+        }
+      });
+
+      // Write the updated JSON data to a new file
+      const newPath = path.join(__dirname, '..', '..', '..', 'dogePunk_data.json');
+      fs.writeFileSync(newPath, JSON.stringify(jsonData, null, 2), 'utf-8');
+
+      return {
+        message: 'success',
+      };
+    } catch (err) {
+      // Handle errors
+      console.error('Error:', err);
+      return {
+        error: 'An error occurred while processing the data.',
+      };
     }
   }
 }
