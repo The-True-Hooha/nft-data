@@ -63,13 +63,15 @@ export class DoggyService {
         },
       );
       const spanText = await page.evaluate(() => {
-        const span: any = document.querySelector('span[data-v-fb227131]');
+        const span: any = document.querySelector('span[data-v-5edf691f]');
         return span ? span.textContent.trim() : null;
       });
       const imageUrl = await page.$eval(
         'img.dogescription-picture',
         (img: any) => img.getAttribute('src'),
       );
+      
+      //TODO: I am not saving images
       if (titles && imageUrl) {
         const imageBuffer = await page.goto(imageUrl);
         const scriptDirectory = __dirname;
@@ -78,7 +80,7 @@ export class DoggyService {
           '..',
           '..',
           '..',
-          'images',
+          'doginals-images',
         );
         await fs.promises.mkdir(imageFolderPath, { recursive: true });
         const filename = path.join(
@@ -101,16 +103,15 @@ export class DoggyService {
         name: titles,
         number: spanText,
         imageUrl: imageUrl,
-        collectionSymbol: 'dogepunk',
-        attributes: [
-          {
-            Hat: 'string',
-            Eye: 'string',
-            Mouth: 'string',
-            Necklace: 'string',
-            Shoes: 'string',
-          },
-        ],
+        collectionSymbol: 'doginalsdragon',
+        attributes: {
+          rank: 'string',
+          wings: 'string',
+          neck: 'string',
+          mouth: 'string',
+          shirt: 'string',
+          eye: 'string',
+        },
       };
       this.scrapedData.push(save2Json);
       return save2Json;
@@ -148,7 +149,7 @@ export class DoggyService {
         __dirname,
         '..',
         '..',
-        'scraped_data.json',
+        'doginals.json',
       );
       fs.writeFileSync(
         jsonFilePath,
@@ -212,7 +213,7 @@ export class DoggyService {
       '..',
       '..',
       '..',
-      'scraped_data2.json',
+      'doginals.json',
     );
     fs.writeFileSync(
       jsonFilePath,
@@ -337,7 +338,13 @@ export class DoggyService {
         });
       });
 
-      const filePath = path.join(__dirname, '..', '..', '..', 'dogePunk_data.xlsx');
+      const filePath = path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        'dogePunk_data.xlsx',
+      );
       await workbook.xlsx.writeFile(filePath);
     } catch (err) {
       console.error('Error:', err);
@@ -347,13 +354,7 @@ export class DoggyService {
 
   async replaceHat(purpleHat: string[]): Promise<any> {
     try {
-      const jsonFilePath = path.join(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        '_data.json',
-      );
+      const jsonFilePath = path.join(__dirname, '..', '..', '..', '_data.json');
 
       // Read the JSON file
       const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
@@ -379,7 +380,13 @@ export class DoggyService {
       });
 
       // Write the updated JSON data to a new file
-      const newPath = path.join(__dirname, '..', '..', '..', 'dogePunk_data.json');
+      const newPath = path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        'dogePunk_data.json',
+      );
       fs.writeFileSync(newPath, JSON.stringify(jsonData, null, 2), 'utf-8');
 
       return {
